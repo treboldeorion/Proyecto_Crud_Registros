@@ -1,10 +1,12 @@
 
 import './App.css';
-import {useState} from "react";
+import {useState, useEffect} from "react";
 import Axios from "axios";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+
 import Swal from 'sweetalert2'
+
 
 
 
@@ -36,15 +38,16 @@ function App() {
         html: "<i>El empleado <strong>"+nombre+" </strong> fue registrado con Exito!</i>",
         icon: 'success',
         timer:3000
-        }).catch(function(error){
-          Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: JSON.parse(JSON.stringify(error)).message==="Network Error"?"Intente mas tarde":JSON.parse(JSON.stringify(error)).message
-          })
-        }); 
+        }) 
 
+    }).catch(function(error){
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: JSON.parse(JSON.stringify(error)).message==="Network Error"?"Intente mas tarde":JSON.parse(JSON.stringify(error)).message
+      })
     });
+
   }
 
     const update = ()=>{
@@ -63,14 +66,15 @@ function App() {
         html: "<i>El empleado <strong>"+nombre+" </strong> fue Editado con Exito!</i>",
         icon: 'success',
         timer:3000
-      }).catch(function(error){
-        Swal.fire({
-          icon: 'error',
-          title: 'Oops...',
-          text: JSON.parse(JSON.stringify(error)).message==="Network Error"?"Intente mas tarde":JSON.parse(JSON.stringify(error)).message
-        })
-      });                   
-    });
+      })                  
+    }).catch(function(error){
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'No se logro eliminar empleado',
+        footer: JSON.parse(JSON.stringify(error)).message==="Network Error"?"Intente mas tarde":JSON.parse(JSON.stringify(error)).message
+      })
+    }); 
   }
   const deleteEmple = (val)=>{
     Swal.fire({
@@ -134,12 +138,13 @@ function App() {
     Axios.get("http://localhost:3001/empleados").then((response)=>{
       setEmpleados(response.data);
       
-    });
+    }).catch(function(error){
+      console.log("Sin Conexion")});
   
   } 
 
 
- // getEmpleados();
+  useEffect (getEmpleados,[]);
 
   return (
     <div className="container">
